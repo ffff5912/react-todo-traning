@@ -53,6 +53,9 @@ var TodoForm = React.createClass({
             });
         }.bind(this));
     },
+    shouldComponentUpdate: function(nextProps, nextState) {
+        return this.state.name !== nextState.name;
+    },
     render: function() {
         var disabled = this.state.name.trim().length <= 0;
         return (
