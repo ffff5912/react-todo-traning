@@ -34,6 +34,22 @@ var TodoList = React.createClass({
     }
 });
 
+var CompletedTodoList = React.createClass({
+  render: function() {
+    var rows = this.props.todos.filter(function(todo) {
+      return todo.done;
+    }).map(function(todo) {
+      return (<Todo key={todo.id} todo={todo}></Todo>);
+    });
+    return (
+      <div className="completed-todos">
+        <h2>Completed</h2>
+        <ul>{rows}</ul>
+      </div>
+    );
+  }
+});
+
 var App = React.createClass({
     getInitialState: function() {
         return {
@@ -73,8 +89,7 @@ var App = React.createClass({
       render: function() {
         var page = this.state.page === 'active' ?
           (<TodoList todos={this.state.todos} />) :
-          (<div>Completed todos comes here!</div>);//TODO replace with <CompletedTodoList>
-
+          (<CompletedTodoList todos={this.state.todos} />);
         return (
           <div>
             <h1>My Todo</h1>
