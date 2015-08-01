@@ -41,7 +41,7 @@ var TodoForm = React.createClass({
     },
     handleNameChange: function(e) {
         this.setState({
-            name: e.taget.value
+            name: e.target.value
         });
     },
     handleSubmit: function(e) {
