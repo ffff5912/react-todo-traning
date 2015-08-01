@@ -1,4 +1,6 @@
 var React = require('react/addons');
+var EventEmitter = require('events').EventEmitter;
+var assign = require('object-assign');
 
 var generateId = (function() {
     var id = 0;
@@ -15,10 +17,7 @@ var todos = [{
     name: 'Birthday present'
 }];
 
-var TodoStrage = {
-    on: function(_, _callback) { //TODO use EventEmitter
-        this._onChangeCallback = _callback;
-    },
+var TodoStrage = assign({}, EventEmitter.prototype, {
     getAll: function(callback) {
         callback(todos);
     },
@@ -36,7 +35,7 @@ var TodoStrage = {
                         [i, 1, newTodo]
                     ]
                 });
-                this._onChangeCallback();
+                this.emit('change');
                 break;
             }
         }
@@ -49,8 +48,8 @@ var TodoStrage = {
         todos = React.addons.update(todos, {
             $push: [newTodo]
         });
-        this._onChangeCallback();
+        this.emit('change');
         callback();
     }
-};
+});
 module.exports = TodoStrage;
