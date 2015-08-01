@@ -1,5 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var React = require('react/addons');
+var Perf = React.addons.Perf;
 var TodoStrage = require('./strage.js');
 var Router = require('director').Router;
 
@@ -41,7 +42,7 @@ var TodoForm = React.createClass({displayName: "TodoForm",
     },
     handleNameChange: function(e) {
         this.setState({
-            name: e.taget.value
+            name: e.target.value
         });
     },
     handleSubmit: function(e) {
@@ -72,16 +73,20 @@ var App = React.createClass({displayName: "App",
     },
     componentDidMount: function() {
         //one of the lifecycle methods
-        var setTodos = function() {
+        var setTodoState = function() {
             TodoStrage.getAll(function(todos) {
+                Perf.start();
                 this.setState({
                     todos: todos
+                }, function() {
+                    Perf.stop();
+                    Perf.printWasted();
                 });
             }.bind(this));
         }.bind(this);
         //フィードバックをうけとる
-        TodoStrage.on('change', setTodos);
-        setTodos();
+        TodoStrage.on('change', setTodoState);
+        setTodoState();
 
         var setActivePage = function() {
           this.setState({ page: 'active'});

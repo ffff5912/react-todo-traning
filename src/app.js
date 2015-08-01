@@ -1,4 +1,5 @@
 var React = require('react/addons');
+var Perf = React.addons.Perf;
 var TodoStrage = require('./strage.js');
 var Router = require('director').Router;
 
@@ -71,16 +72,20 @@ var App = React.createClass({
     },
     componentDidMount: function() {
         //one of the lifecycle methods
-        var setTodos = function() {
+        var setTodoState = function() {
             TodoStrage.getAll(function(todos) {
+                Perf.start();
                 this.setState({
                     todos: todos
+                }, function() {
+                    Perf.stop();
+                    Perf.printWasted();
                 });
             }.bind(this));
         }.bind(this);
         //フィードバックをうけとる
-        TodoStrage.on('change', setTodos);
-        setTodos();
+        TodoStrage.on('change', setTodoState);
+        setTodoState();
 
         var setActivePage = function() {
           this.setState({ page: 'active'});
